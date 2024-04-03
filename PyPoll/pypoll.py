@@ -1,19 +1,25 @@
-import csv
-
-def analyze_votes(csv_file):
+def analyze_votes(text_file, output_file):
     # Initialize variables to store data
     total_votes = 0
     candidate_votes = {}
     
-    # Read the CSV file
-    
-
-    with open(csv_file,  newline="") as file:
-        reader = csv.reader(file, delimiter=",")
-        next(reader)  # Skip header row
-        for row in reader:
+    # Read the text file
+    with open(text_file, 'r') as file:
+        # Read lines from the file
+        lines = file.readlines()
+        
+        # Iterate over each line
+        for line in lines[1:]:  # Skip the header row
+            # Split the line into parts based on delimiter (assuming it's a comma)
+            parts = line.strip().split(",")
+            
+            # Extract candidate name from parts (assuming it's in the second part)
+            candidate = parts[1]
+            
+            # Count total votes
             total_votes += 1
-            candidate = row[2]  # Assuming candidate names are in the third column
+            
+            # Update candidate votes
             if candidate in candidate_votes:
                 candidate_votes[candidate] += 1
             else:
@@ -25,7 +31,19 @@ def analyze_votes(csv_file):
     # Find the winner
     winner = max(candidate_votes, key=candidate_votes.get)
     
-    # Print results
+    # Write analysis results to a text file
+    with open(output_file, 'w') as outfile:
+        outfile.write("Election Results\n")
+        outfile.write("-------------------------\n")
+        outfile.write(f"Total Votes: {total_votes}\n")
+        outfile.write("-------------------------\n")
+        for candidate, votes in candidate_votes.items():
+            outfile.write(f"{candidate}: {candidate_percentages[candidate]:.3f}% ({votes})\n")
+        outfile.write("-------------------------\n")
+        outfile.write(f"Winner: {winner}\n")
+        outfile.write("-------------------------\n")
+    
+    # Print results to the terminal
     print("Election Results")
     print("-------------------------")
     print(f"Total Votes: {total_votes}")
@@ -37,4 +55,4 @@ def analyze_votes(csv_file):
     print("-------------------------")
 
 # Example usage:
-analyze_votes("election_data.csv")
+analyze_votes("election_data1.txt", "election_results.txt")
